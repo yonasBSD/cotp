@@ -18,11 +18,10 @@ use super::{handle_exit, show_popup};
 pub(super) fn main_handler(key_event: KeyEvent, app: &mut App) {
     match key_event.code {
         // exit application on ESC or Q
-        KeyCode::Esc | KeyCode::Char('q' | 'Q') => {
-            if app.focus != Focus::SearchBar {
-                handle_exit(app);
-            }
+        KeyCode::Esc | KeyCode::Char('q' | 'Q') if app.focus != Focus::SearchBar => {
+            handle_exit(app);
         }
+
         // exit application on Ctrl-D
         KeyCode::Char('d' | 'D' | 'c') => {
             if key_event.modifiers == KeyModifiers::CONTROL {
@@ -91,10 +90,8 @@ pub(super) fn main_handler(key_event: KeyEvent, app: &mut App) {
             );
         }
 
-        KeyCode::Char('f' | 'F') => {
-            if key_event.modifiers == KeyModifiers::CONTROL {
-                app.focus = Focus::SearchBar;
-            }
+        KeyCode::Char('f' | 'F') if key_event.modifiers == KeyModifiers::CONTROL => {
+            app.focus = Focus::SearchBar;
         }
 
         KeyCode::Char('/') => app.focus = Focus::SearchBar,

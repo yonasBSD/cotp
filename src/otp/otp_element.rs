@@ -191,7 +191,7 @@ impl OTPElement {
 
         match self.type_ {
             OTPType::Totp => {
-                let code = totp(&self.secret, self.algorithm)?;
+                let code = totp(&self.secret, self.algorithm, self.period)?;
 
                 Ok(self.format_code(code)?)
             }
@@ -227,13 +227,16 @@ impl OTPElement {
     }
 
     fn format_code(&self, value: u32) -> Result<String, OtpError> {
-        // Get the formatted code
-        let exponential = 10_u64
-            .checked_pow(self.digits as u32)
-            .ok_or(OtpError::InvalidDigits)?;
-        let s = (value as u64 % exponential).to_string();
-        Ok("0".repeat((self.digits as usize).saturating_sub(s.chars().count())) + s.as_str())
+        format_code(self.digits, value)
     }
+}
+
+pub(crate) fn format_code(digits: u64, value: u32) -> Result<String, OtpError> {
+    let exponential = 10_u64
+        .checked_pow(digits as u32)
+        .ok_or(OtpError::InvalidDigits)?;
+    let s = (value as u64 % exponential).to_string();
+    Ok("0".repeat((digits as usize).saturating_sub(s.chars().count())) + s.as_str())
 }
 
 impl OTPElementBuilder {

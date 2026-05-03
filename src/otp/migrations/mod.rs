@@ -16,7 +16,7 @@ fn migrate_to_2(database: &mut OTPDatabase) -> color_eyre::Result<()> {
 pub fn migrate(database: &mut OTPDatabase) -> color_eyre::Result<()> {
     let mut binding = MIGRATIONS_LIST;
     let migrations = binding.as_mut();
-    migrations.sort_unstable_by(|c1, c2| c1.to_version.cmp(&c2.to_version));
+    migrations.sort_unstable_by_key(|c1| c1.to_version);
     for i in migrations {
         if database.version < i.to_version {
             // Do the migration

@@ -5,12 +5,12 @@ use crate::otp::otp_error::OtpError;
 
 use super::hotp_maker::hotp;
 
-pub fn totp(secret: &str, algorithm: OTPAlgorithm) -> Result<u32, OtpError> {
+pub fn totp(secret: &str, algorithm: OTPAlgorithm, period: u64) -> Result<u32, OtpError> {
     let time = SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)
         .unwrap()
         .as_secs();
-    generate_totp(secret, algorithm, time, 30, 0)
+    generate_totp(secret, algorithm, time, period, 0)
 }
 
 fn generate_totp(
@@ -25,7 +25,10 @@ fn generate_totp(
 
 #[cfg(test)]
 mod tests {
-    use crate::otp::{algorithms::totp_maker::generate_totp, otp_algorithm::OTPAlgorithm};
+    use crate::otp::{
+        algorithms::totp_maker::generate_totp, otp_algorithm::OTPAlgorithm,
+        otp_element::format_code,
+    };
 
     #[test]
     fn test_totp() {
@@ -33,5 +36,23 @@ mod tests {
             455260182,
             generate_totp("BASE32SECRET3232", OTPAlgorithm::Sha1, 0, 30, 0).unwrap()
         );
+    }
+
+    #[test]
+    fn test_totp_with_60_seconds_period() {
+        // Arrange / Act
+        let raw_code = generate_totp(
+            "DEADBEEFDEADBEEFDEADBEEFDEADBEEF",
+            OTPAlgorithm::Sha1,
+            1777799540,
+            60,
+            0,
+        )
+        .unwrap();
+
+        let code = format_code(6, raw_code).unwrap();
+
+        // Assert
+        assert_eq!("295439", code)
     }
 }

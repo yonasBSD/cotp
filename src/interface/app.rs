@@ -276,11 +276,18 @@ impl<'a> App<'a> {
                 "
             Type: {}
             Algorithm: {}
+            Period: {} {}
             Counter: {}
             Pin: {}
             ",
                 element.type_,
                 element.algorithm,
+                element.period,
+                if element.period == 1u64 {
+                    "second"
+                } else {
+                    "seconds"
+                },
                 element
                     .counter
                     .map_or_else(|| String::from("N/A"), |e| e.to_string()),
