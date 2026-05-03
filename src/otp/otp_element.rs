@@ -191,7 +191,7 @@ impl OTPElement {
 
         match self.type_ {
             OTPType::Totp => {
-                let code = totp(&self.secret, self.algorithm)?;
+                let code = totp(&self.secret, self.algorithm, self.period)?;
 
                 Ok(self.format_code(code)?)
             }

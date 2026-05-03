@@ -5,12 +5,12 @@ use crate::otp::otp_error::OtpError;
 
 use super::hotp_maker::hotp;
 
-pub fn totp(secret: &str, algorithm: OTPAlgorithm) -> Result<u32, OtpError> {
+pub fn totp(secret: &str, algorithm: OTPAlgorithm, period: u64) -> Result<u32, OtpError> {
     let time = SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)
         .unwrap()
         .as_secs();
-    generate_totp(secret, algorithm, time, 30, 0)
+    generate_totp(secret, algorithm, time, period, 0)
 }
 
 fn generate_totp(
