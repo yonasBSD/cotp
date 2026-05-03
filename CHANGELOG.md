@@ -1,3 +1,11 @@
+## [1.9.10](https://github.com/replydev/cotp/compare/v1.9.9...v1.9.10) (2026-05-03)
+
+
+### Bug Fixes
+
+* do not discard time period in TOTP codes ([dd6d464](https://github.com/replydev/cotp/commit/dd6d46471a4ccfdf0fb18a21669ddaca55e89faf))
+* do not discard time period on TOTP codes ([#661](https://github.com/replydev/cotp/issues/661)) ([0e74377](https://github.com/replydev/cotp/commit/0e74377be1bc669122bad69a01b139d54464afee))
+
 ## [1.9.9](https://github.com/replydev/cotp/compare/v1.9.8...v1.9.9) (2026-04-12)
 
 
