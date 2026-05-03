@@ -25,7 +25,10 @@ fn generate_totp(
 
 #[cfg(test)]
 mod tests {
-    use crate::otp::{algorithms::totp_maker::generate_totp, otp_algorithm::OTPAlgorithm};
+    use crate::otp::{
+        algorithms::totp_maker::generate_totp, otp_algorithm::OTPAlgorithm,
+        otp_element::format_code,
+    };
 
     #[test]
     fn test_totp() {
@@ -33,5 +36,23 @@ mod tests {
             455260182,
             generate_totp("BASE32SECRET3232", OTPAlgorithm::Sha1, 0, 30, 0).unwrap()
         );
+    }
+
+    #[test]
+    fn test_totp_with_60_seconds_period() {
+        // Arrange / Act
+        let raw_code = generate_totp(
+            "DEADBEEFDEADBEEFDEADBEEFDEADBEEF",
+            OTPAlgorithm::Sha1,
+            1777799540,
+            60,
+            0,
+        )
+        .unwrap();
+
+        let code = format_code(6, raw_code).unwrap();
+
+        // Assert
+        assert_eq!("295439", code)
     }
 }
